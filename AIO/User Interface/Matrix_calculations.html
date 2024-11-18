@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matrix Calculator</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+    }
+    .container {
+      text-align: center;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .matrix-inputs {
+      display: flex;
+      gap: 20px;
+    }
+    textarea {
+      width: 150px;
+      height: 100px;
+      padding: 10px;
+      resize: none;
+      font-size: 1rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5cm;
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+      background-color: #007bff;
+      color: #fff;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .result {
+      margin-top: 20px;
+      width: 150px;
+      height: 100px;
+      font-size: 1rem;
+      border-radius: 4px;
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+    .yellow-bg {
+      background-color: yellow;
+    }
+    .blue-bg {
+      background-color: lightblue;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>3x3 Matrix Calculator</h2>
+    <div class="matrix-inputs">
+      <textarea id="matrix1" placeholder="Enter Matrix 1 (3x3)"></textarea>
+      <textarea id="matrix2" placeholder="Enter Matrix 2 (3x3)"></textarea>
+    </div>
+    <div class="buttons">
+      <button onclick="performOperation('add')">Addition</button>
+      <button onclick="performOperation('subtract')">Subtraction</button>
+    </div>
+    <textarea id="result" class="result" readonly placeholder="Result"></textarea>
+  </div>
+
+  <script>
+    function parseMatrix(matrixText) {
+      return matrixText
+        .trim()
+        .split('\n')
+        .map(row => row.trim().split(/\s+/).map(Number));
+    }
+
+    function displayResult(resultMatrix, operation) {
+      const resultText = resultMatrix.map(row => row.join(' ')).join('\n');
+      const resultBox = document.getElementById('result');
+      resultBox.value = resultText;
+
+      // Set background color based on operation
+      if (operation === 'add') {
+        resultBox.classList.add('yellow-bg');
+        resultBox.classList.remove('blue-bg');
+      } else if (operation === 'subtract') {
+        resultBox.classList.add('blue-bg');
+        resultBox.classList.remove('yellow-bg');
+      }
+    }
+
+    function performOperation(operation) {
+      const matrix1 = parseMatrix(document.getElementById('matrix1').value);
+      const matrix2 = parseMatrix(document.getElementById('matrix2').value);
+
+      if (matrix1.length !== 3 || matrix2.length !== 3 ||
+          !matrix1.every(row => row.length === 3) ||
+          !matrix2.every(row => row.length === 3)) {
+        alert('Please enter two valid 3x3 matrices.');
+        return;
+      }
+
+      let resultMatrix = [];
+
+      for (let i = 0; i < 3; i++) {
+        let row = [];
+        for (let j = 0; j < 3; j++) {
+          if (operation === 'add') {
+            row.push(matrix1[i][j] + matrix2[i][j]);
+          } else if (operation === 'subtract') {
+            row.push(matrix1[i][j] - matrix2[i][j]);
+          }
+        }
+        resultMatrix.push(row);
+      }
+
+      displayResult(resultMatrix, operation);
+    }
+  </script>
+</body>
+</html>
